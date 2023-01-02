@@ -26,9 +26,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/', [PollController::class, 'index']);
     Route::get('/create', [PollController::class, 'create']);
     Route::post('/add', [PollController::class, 'store']);
+    Route::put('/update/{id}', [PollController::class, 'update']);
     Route::get('/show/{id}', [PollController::class, 'show']);
+    Route::get('/edit/{id}', [PollController::class, 'edit']);
     Route::resource('vote', PollAnswerController::class);
-    Route::get('/result/{id}', [PollAnswerController::class, 'show']);
+    // Route::delete('/result/{id}', [PollAnswerController::class, 'show']);
+    // Route::get('/delete/{id}', [PollAnswerController::class, 'destroy']);
+
 });
 
 

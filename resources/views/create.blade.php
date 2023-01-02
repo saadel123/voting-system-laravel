@@ -35,13 +35,18 @@
                     <th>Action</th>
                 </tr>
                 <tr>
-                    <td><input type="text" name="answers[0]" placeholder="Enter subject" class="form-control" />
+                    <td><input type="text" name="titles[0]" placeholder="Enter subject" class="form-control" />
                     </td>
                     <td><button type="button" class="btn btn-outline-danger remove-input-field">Delete</button></td>
                 </tr>
             </table>
-            <button type="button" name="add" id="dynamic-ar" class="btn btn-outline-primary">Add
-                Subject</button>
+            <div class="row">
+                <div class="cold-md-4 text-center">
+                    <button type="button" name="add" id="dynamic-ar" class="btn btn-outline-primary">Add
+                        Subject</button>
+                </div>
+            </div>
+
             <input type="submit" value="Create">
         </form>
     </div>
@@ -52,7 +57,7 @@
         var i = 0;
         $("#dynamic-ar").click(function() {
             ++i;
-            $("#dynamicAddRemove").append('<tr><td><input type="text" name="answers[' + i +
+            $("#dynamicAddRemove").append('<tr><td><input type="text" name="titles[' + i +
                 ']" placeholder="Enter subject" class="form-control" /></td><td><button type="button" class="btn btn-outline-danger remove-input-field">Delete</button></td></tr>'
             );
         });

@@ -102,16 +102,6 @@ class PollAnswerController extends Controller
             Alert::warning('Error', 'You should be authetifacted in order to poll your opinion');
             return response()->json(['danger' => 'Data not added '], 400);
         }
-
-
-        // $poll = PollAnswer::findOrFail($id);
-        // // $modifier_poll_answer = $request->all();
-        // // $poll_answer['votes'] = $poll_answer['votes'] + 1;
-
-        // $poll->update([
-        //     "votes" => (int) "votes" + 1,
-        // ]);
-        // $poll->poll_answers->update(['votes' => $poll->poll_answer['votes'] + 1]);
     }
 
     /**
@@ -122,6 +112,10 @@ class PollAnswerController extends Controller
      */
     public function destroy($id)
     {
-        //
+        PollAnswer::find($id)->delete($id);
+
+        return response()->json([
+            'success' => 'Record deleted successfully!'
+        ],200);
     }
 }

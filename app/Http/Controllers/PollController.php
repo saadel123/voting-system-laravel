@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Poll;
+use App\Models\PollAnswer;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -16,7 +17,6 @@ class PollController extends Controller
      */
     public function index()
     {
-
         $polls = Poll::with('poll_answers')->orderBy('created_at', 'DESC')->get();
         return view('welcome')->with(['polls' => $polls]);
     }
@@ -40,18 +40,18 @@ class PollController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'answers.0' => 'required',
+            'titles.0' => 'required',
             'title' => 'required'
         ]);
         $poll = Poll::create([
             "title" => $request->title,
             "description" => $request->description,
         ]);
-        foreach ($request->answers as  $answer) {
-            if (!empty($answer)) {
+        foreach ($request->titles as  $title) {
+            if (!empty($title)) {
                 $poll->poll_answers()->create([
                     "votes" => $request->votes,
-                    "title" => $answer,
+                    "title" => $title,
                     "poll_id" => $poll->id,
                 ]);
             }
@@ -105,7 +105,9 @@ class PollController extends Controller
      */
     public function edit($id)
     {
-        //
+        $poll = Poll::whereId($id)->with('poll_answers')->first();
+        // ['polls' => $polls]
+        return view('update')->with(['poll' => $poll]);
     }
 
     /**
@@ -117,7 +119,34 @@ class PollController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'titles.0' => 'required',
+            'title' => 'required'
+        ]);
+        $poll = Poll::findOrFail($id);
+        $modifierPoll = $request->all();
+        $poll->update($modifierPoll);
+        //Update Exsting polls
+        foreach ($request->titles as  $value) {
+            $poll_anwer = PollAnswer::findOrFail($value['id']);
+            $poll_anwer->title = $value['titre'];
+            $poll_anwer->update();
+        }
+        //Add new polls
+        if (!empty($request->new_titles)) {
+            foreach ($request->new_titles as  $new_title) {
+                if (!empty($new_title)) {
+                    $poll->poll_answers()->create([
+                        // "votes" => $request->votes,
+                        "title" => $new_title,
+                        "poll_id" => $id,
+                    ]);
+                }
+            }
+        }
+        Alert::success('Congrats', 'You\'re poll has Successfully Updated');
+
+        return redirect()->back();
     }
 
     /**
